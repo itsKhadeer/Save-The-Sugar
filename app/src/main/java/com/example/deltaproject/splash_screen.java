@@ -2,18 +2,16 @@ package com.example.deltaproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 
-/*" comments "*/
-public class MainActivity extends AppCompatActivity {
+public class splash_screen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(new Game(this));
+
+        startActivity(new Intent(splash_screen.this, MainActivity.class));
+        finish();
     }
-
-
 }
