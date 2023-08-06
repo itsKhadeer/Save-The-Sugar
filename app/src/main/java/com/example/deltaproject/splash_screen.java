@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class splash_screen extends AppCompatActivity {
 
@@ -11,7 +13,8 @@ public class splash_screen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startActivity(new Intent(splash_screen.this, MainActivity.class));
+
+        startActivity(new Intent(splash_screen.this, HomeActivity.class));
         finish();
     }
 }

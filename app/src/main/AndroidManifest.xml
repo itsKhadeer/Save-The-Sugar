@@ -15,12 +15,19 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
+            android:noHistory="true"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:screenOrientation="landscape"/>
+
         <activity
             android:name=".splash_screen"
             android:exported="true"
             android:screenOrientation="landscape"
-            android:theme="@style/SplashTheme">
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
