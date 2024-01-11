@@ -9,7 +9,7 @@
 Language: Java
 description: The user needs to save the sugar from the ants. <br>
 Ants spawn randomly on the map. User can Move the sugar away from the ants.
-user can kill ants when they smashe them.
+user can kill ants when they smash the ants.
 
 <h1>Contribution</h1>
 # Contributing to the Game
