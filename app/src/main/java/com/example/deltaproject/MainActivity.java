@@ -1,87 +1,58 @@
 package com.example.deltaproject;
-
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.animation.Animator;
+import android.app.Activity;
 import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import android.util.Log;
 
-/*" comments "*/
-public class MainActivity extends AppCompatActivity {
-
-    static boolean hurtSoundWasPlaying;
-    static boolean bombBlastSoundWasPlaying;
-    static boolean bombThrowSoundWasPlaying;
-    static boolean enemySpawnSoundWasPlaying;
-    static boolean gameOverSoundWasPlaying;
-
+/**
+ * MainActivity is the entry point to our application.
+ */
+public class MainActivity extends Activity {
     private Game game;
-    public static int HighScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity.java", "onCreate()");
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Set content view to game, so that objects in the Game class can be rendered to the screen
         game = new Game(this);
         setContentView(game);
     }
 
     @Override
     protected void onStart() {
+        Log.d("MainActivity.java", "onStart()");
         super.onStart();
     }
 
     @Override
     protected void onResume() {
+        Log.d("MainActivity.java", "onResume()");
         super.onResume();
-        if(gameOverSoundWasPlaying) {
-            Game.game_over_sound.start();
-            gameOverSoundWasPlaying = false;
-        }
-        if(bombThrowSoundWasPlaying) {
-            Game.bomb_throw_sound.start();
-            bombThrowSoundWasPlaying = false;
-        }
-        if(bombBlastSoundWasPlaying) {
-            Game.bomb_blast_sound.start();
-            bombBlastSoundWasPlaying = false;
-        }
-        if(hurtSoundWasPlaying) {
-            Game.hurt_sound.pause();
-            hurtSoundWasPlaying = false;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
     }
 
     @Override
     protected void onPause() {
+        Log.d("MainActivity.java", "onPause()");
         game.pause();
         super.onPause();
-        if(Game.game_over_sound.isPlaying()) {
-            Game.game_over_sound.pause();
-            gameOverSoundWasPlaying = true;
-        }
-        if(Game.bomb_throw_sound.isPlaying()) {
-            Game.bomb_throw_sound.pause();
-            bombThrowSoundWasPlaying = true;
-        }
-        if(Game.bomb_blast_sound.isPlaying()) {
-            Game.bomb_blast_sound.pause();
-            bombBlastSoundWasPlaying = true;
-        }
-        if(Game.hurt_sound.isPlaying()) {
-            Game.hurt_sound.pause();
-            hurtSoundWasPlaying = true;
-        }
+    }
 
+    @Override
+    protected void onStop() {
+        Log.d("MainActivity.java", "onStop()");
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("MainActivity.java", "onDestroy()");
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Comment out "super.onBackPressed()" to disable button
+        //super.onBackPressed();
     }
 }
