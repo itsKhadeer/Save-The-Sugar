@@ -10,25 +10,39 @@ import com.example.deltaproject.R;
 import com.example.deltaproject.Utils;
 
 /**
- * Player is the main character of the game, which the user can control with a touch joystick.
- * The player class is an extension of a Circle, which is an extension of a GameObject
+ * Sugar is the main character of the game, which the user can control with touch.
+ * The Sugar class is an extension of a Circle, which is an extension of a GameObject
  */
-public class Player extends Circle {
+public class Sugar extends Circle {
     public static final double SPEED_PIXELS_PER_SECOND = 200.0;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
-    public static final int MAX_HEALTH_POINTS = 5;
+    public static final int MAX_HEALTH_POINTS = 600;
     public static final int MAX_SPEED_DIST = 200;
+    protected boolean is_touched;
     protected double finger_position_x;
     protected double finger_position_y;
     private HealthBar healthBar;
     private int healthPoints = MAX_HEALTH_POINTS;
 
-    public Player(Context context,double finger_position_x, double finger_position_y, double positionX, double positionY, double radius) {
+    public Sugar(Context context,double finger_position_x, double finger_position_y, double positionX, double positionY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.white), positionX, positionY, radius);
         this.finger_position_x = finger_position_x;
         this.finger_position_y = finger_position_y;
         this.healthBar = new HealthBar(context, this);
     }
+
+    public boolean get_is_touched() {
+        return is_touched;
+    }
+     public void set_is_touched(boolean is_touched) {
+        this.is_touched = is_touched;
+     }
+
+     public boolean check_is_touched(double finger_position_x, double finger_position_y) {
+        double distance = Utils.getDistanceBetweenPoints(finger_position_x, finger_position_y, this.positionX, this.positionY);
+
+        return (distance < radius);
+     }
 
     public void update() {
 
@@ -79,4 +93,6 @@ public class Player extends Circle {
         if (healthPoints >= 0)
             this.healthPoints = healthPoints;
     }
+
+
 }

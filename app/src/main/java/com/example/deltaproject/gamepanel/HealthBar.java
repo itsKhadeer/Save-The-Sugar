@@ -5,18 +5,18 @@ import android.graphics.Paint;
 import androidx.core.content.ContextCompat;
 
 import com.example.deltaproject.R;
-import com.example.deltaproject.gameobject.Player;
+import com.example.deltaproject.gameobject.Sugar;
 
 /**
  * HealthBar display the players health to the screen
  */
 public class HealthBar {
-    private Player player;
+    private Sugar sugar;
     private Paint borderPaint, healthPaint;
     private int width, height, margin; // pixel value
 
-    public HealthBar(Context context, Player player) {
-        this.player = player;
+    public HealthBar(Context context, Sugar sugar) {
+        this.sugar = sugar;
         this.width = 100;
         this.height = 20;
         this.margin = 2;
@@ -31,10 +31,10 @@ public class HealthBar {
     }
 
     public void draw(Canvas canvas) {
-        float x = (float) player.getPositionX();
-        float y = (float) player.getPositionY();
+        float x = (float) sugar.getPositionX();
+        float y = (float) sugar.getPositionY();
         float distanceToPlayer = 30;
-        float healthPointPercentage = (float) player.getHealthPoint()/player.MAX_HEALTH_POINTS;
+        float healthPointPercentage = (float) sugar.getHealthPoint()/sugar.MAX_HEALTH_POINTS;
 
         // Draw border
         float borderLeft, borderTop, borderRight, borderBottom;

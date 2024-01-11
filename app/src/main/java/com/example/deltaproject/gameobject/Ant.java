@@ -1,49 +1,51 @@
 package com.example.deltaproject.gameobject;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import androidx.core.content.ContextCompat;
 
 import com.example.deltaproject.GameLoop;
 import com.example.deltaproject.R;
+import com.example.deltaproject.Utils;
 
 /**
- * Enemy is a character which always moves in the direction of the player.
- * The Enemy class is an extension of a Circle, which is an extension of a GameObject
+ * Ant is a character which always moves in the direction of the Sugar.
+ * The Ant class is an extension of a Circle, which is an extension of a GameObject
  */
 public class Ant extends Circle {
 
-    private static final double SPEED_PIXELS_PER_SECOND = Player.SPEED_PIXELS_PER_SECOND*1.5;
+    private static final double SPEED_PIXELS_PER_SECOND = Sugar.SPEED_PIXELS_PER_SECOND*1.5;
     private static final double MAX_SPEED = SPEED_PIXELS_PER_SECOND / GameLoop.MAX_UPS;
     private static final double SPAWNS_PER_MINUTE = 20;
     private static final double SPAWNS_PER_SECOND = SPAWNS_PER_MINUTE/60.0;
     private static final double UPDATES_PER_SPAWN = GameLoop.MAX_UPS/SPAWNS_PER_SECOND;
     private static double updatesUntilNextSpawn = UPDATES_PER_SPAWN;
-    private Player player;
+    private Sugar sugar;
 
-    public Ant(Context context, Player player, double positionX, double positionY, double radius) {
+    public Ant(Context context, Sugar sugar, double positionX, double positionY, double radius) {
         super(context, ContextCompat.getColor(context, R.color.Red), positionX, positionY, radius);
-        this.player = player;
+        this.sugar = sugar;
     }
 
     /**
-     * Enemy is an overload constructor used for spawning enemies in random locations
+     * Ant is an overload constructor used for spawning ants in random locations at the border
      * @param context
-     * @param player
+     * @param sugar
      */
-    public Ant(Context context, Player player) {
+    public Ant(Context context, Sugar sugar) {
         super(
                 context,
                 ContextCompat.getColor(context, R.color.Red),
-                Math.random()*1000,
-                Math.random()*1000,
+                Math.random()*getScreenWidth(),
+                Math.random()*getScreenHeight(),
                 30
         );
-        this.player = player;
+        this.sugar = sugar;
     }
 
     /**
-     * readyToSpawn checks if a new enemy should spawn, according to the decided number of spawns
+     * readyToSpawn checks if a new ant should spawn, according to the decided number of spawns
      * per minute (see SPAWNS_PER_MINUTE at top)
      * @return
      */
@@ -59,21 +61,21 @@ public class Ant extends Circle {
 
     public void update() {
         // =========================================================================================
-        //   Update velocity of the enemy so that the velocity is in the direction of the player
+        //   Update velocity of the ant so that the velocity is in the direction of the sugar
         // =========================================================================================
-        // Calculate vector from enemy to player (in x and y)
-        double distanceToPlayerX = player.getPositionX() - positionX;
-        double distanceToPlayerY = player.getPositionY() - positionY;
+        // Calculate vector from ant to sugar (in x and y)
+        double distanceToSugarX = sugar.getPositionX() - positionX;
+        double distanceToSugarY = sugar.getPositionY() - positionY;
 
-        // Calculate (absolute) distance between enemy (this) and player
-        double distanceToPlayer = GameObject.getDistanceBetweenObjects(this, player);
+        // Calculate (absolute) distance between ant (this) and sugar
+        double distanceToSugar = GameObject.getDistanceBetweenObjects(this, sugar);
 
-        // Calculate direction from enemy to player
-        double directionX = distanceToPlayerX/distanceToPlayer;
-        double directionY = distanceToPlayerY/distanceToPlayer;
+        // Calculate direction from ant to sugar
+        double directionX = distanceToSugarX/distanceToSugar;
+        double directionY = distanceToSugarY/distanceToSugar;
 
-        // Set velocity in the direction to the player
-        if(distanceToPlayer > 0) { // Avoid division by zero
+        // Set velocity in the direction to the sugar
+        if(distanceToSugar > 0) { // Avoid division by zero
             velocityX = directionX*MAX_SPEED;
             velocityY = directionY*MAX_SPEED;
         } else {
@@ -82,9 +84,24 @@ public class Ant extends Circle {
         }
 
         // =========================================================================================
-        //   Update position of the enemy
+        //   Update position of the ant
         // =========================================================================================
         positionX += velocityX;
         positionY += velocityY;
+    }
+
+    public boolean is_touched(double finger_position_x, double finger_position_y) {
+        double distance = Utils.getDistanceBetweenPoints(finger_position_x, finger_position_y, getPositionX(), getPositionY());
+        if (distance < radius) {
+            return true;
+        }
+        return false;
+    }
+    public static int getScreenWidth() {
+        return Resources.getSystem().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getScreenHeight() {
+        return Resources.getSystem().getDisplayMetrics().heightPixels;
     }
 }

@@ -10,7 +10,7 @@ import android.view.SurfaceView;
 
 import com.example.deltaproject.gameobject.Circle;
 import com.example.deltaproject.gameobject.Ant;
-import com.example.deltaproject.gameobject.Player;
+import com.example.deltaproject.gameobject.Sugar;
 import com.example.deltaproject.gamepanel.GameOver;
 import com.example.deltaproject.gamepanel.Performance;
 
@@ -24,7 +24,7 @@ import java.util.List;
  */
 class Game extends SurfaceView implements SurfaceHolder.Callback {
 
-    private final Player player;
+    private final Sugar sugar;
     private GameLoop gameLoop;
     private List<Ant> antList = new ArrayList<Ant>();
     private GameOver gameOver;
@@ -43,7 +43,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         gameOver = new GameOver(context);
 
         // Initialize game objects
-        player = new Player(context,2*500, 500, 2*500, 500, 32);
+        sugar = new Sugar(context,2*500, 500, 2*500, 500, 32);
 
         // Initialize display and center it around the player
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -57,8 +57,25 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
 
         // Handle user input touch event actions
-        player.setFinger_position_x(event.getX());
-        player.setFinger_position_y(event.getY());
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_POINTER_DOWN:
+                if (sugar.check_is_touched(event.getX(), event.getY())) {
+                     sugar.set_is_touched(true);
+                }
+                //if the ant is smashed, ant dies
+                antList.removeIf(ant -> ant.is_touched(event.getX(), event.getY()));
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                if (sugar.get_is_touched()) {
+                    sugar.setFinger_position_x(event.getX());
+                    sugar.setFinger_position_y(event.getY());
+                }
+                return true;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                sugar.set_is_touched(false);
+        }
 
         return super.onTouchEvent(event);
     }
@@ -91,7 +108,7 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Draw Tilemap
 
         // Draw game objects
-        player.draw(canvas);
+        sugar.draw(canvas);
 
         for (Ant ant : antList) {
             ant.draw(canvas);
@@ -100,45 +117,37 @@ class Game extends SurfaceView implements SurfaceHolder.Callback {
         // Draw game panels
         performance.draw(canvas);
 
-        // Draw Game over if the player is dead
-        if (player.getHealthPoint() <= 0) {
+        // Draw Game over if the ant eat the whole sugar
+        if (sugar.getHealthPoint() <= 0) {
             gameOver.draw(canvas);
         }
     }
 
     public void update() {
-        // Stop updating the game if the player is dead
-        if (player.getHealthPoint() <= 0) {
+        // Stop updating the game if the ants ate the sugar
+        if (sugar.getHealthPoint() <= 0) {
             return;
         }
 
         // Update game state
-        player.update();
+        sugar.update();
 
-        // Spawn enemy
+        // Spawn ant
         if(Ant.readyToSpawn()) {
-            antList.add(new Ant(getContext(), player));
+            antList.add(new Ant(getContext(), sugar));
         }
 
-        // Update states of all enemies
+        // Update states of all ants
         for (Ant ant : antList) {
             ant.update();
         }
 
-        // Iterate through enemyList and Check for collision between each enemy and the player and
-        // spells in spellList.
-        Iterator<Ant> iteratorAnt = antList.iterator();
-        while (iteratorAnt.hasNext()) {
-            Circle ant = iteratorAnt.next();
-            if (Circle.isColliding(ant, player)) {
-                // Remove enemy if it collides with the player
-                iteratorAnt.remove();
-                player.setHealthPoint(player.getHealthPoint() - 1);
+        // Iterate through antList and Check for collision between each ant and the ant and
+        for (Circle ant : antList) {
+            if (Circle.isColliding(ant, sugar)) {
+                sugar.setHealthPoint(sugar.getHealthPoint() - 1);
             }
         }
-
-        // Update gameDisplay so that it's center is set to the new center of the player's
-        // game coordinates
     }
 
     public void pause() {

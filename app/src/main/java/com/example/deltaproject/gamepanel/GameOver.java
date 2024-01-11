@@ -21,7 +21,7 @@ public class GameOver {
     }
 
     public void draw(Canvas canvas) {
-        String text = "Game Over";
+        String text = "Ants Ate Your Sugar";
 
         float x = 800;
         float y = 200;
